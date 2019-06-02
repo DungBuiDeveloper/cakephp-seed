@@ -9,12 +9,8 @@
 <?php $this->end('css'); ?>
 
 <!-- Content -->
-<div class="header-title">
-  <?php foreach ($querys as $query):?>
-    <p>
-      <?php echo $query->title ?>
-    </p>
-  <?php endforeach?>
+<div class="">
+
 </div>
 <!-- /Content -->
 

@@ -13,8 +13,7 @@ class HomeController extends AppController {
     public function index(){
       $activeMenuButton = 'posts';
       $title = 'home title';
-      $articles = TableRegistry::get('Articles');
-      $querys= $articles->find()->toList();
+    
       $this->set(compact('activeMenuButton', 'title','querys'));
 
     }

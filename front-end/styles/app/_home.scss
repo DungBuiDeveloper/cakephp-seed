@@ -1,0 +1,27 @@
+
+/**
+ * Header
+ */
+
+.container-fluid {
+  padding: 0;
+  margin: 0;
+}
+
+.navbar>.container-fluid .navbar-brand {
+  padding-left: 25px;
+}
+
+.content-page {
+  padding: 20px;
+  padding-top: 0;
+}
+.alert
+{
+  position: fixed;
+  width: 100%;
+  top: 0;
+}
+// body {
+//   background-image: url('../img/login.jpg');
+// }

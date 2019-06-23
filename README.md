@@ -13,6 +13,12 @@ English is not my native language, sorry if I misspelled, I use google translate
 
 ## Application features
 
+* Webpack For CakePHP without plugin
+* Simple Blog
+* Simple Admin Page
+* Tinyauth Plugin Custom
+* JWT issue any Token
+
 ## Install
 
 ## Directory structure

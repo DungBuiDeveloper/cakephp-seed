@@ -3,7 +3,7 @@
 </h1>
 <?php
 
-  echo $this->Html->link('Active User ' . $user, [
+  echo $this->Html->link('Click Me' , [
     'controller' => 'account',
     'action' => 'lostPasswordStepTwo',
     '?' => ['token' => $token],

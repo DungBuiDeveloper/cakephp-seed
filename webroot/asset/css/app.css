@@ -79,12 +79,13 @@
 
 .panel-login .submit input {
   float: left;
-  width: 40%;
+  width: 100%;
   font-size: 14px;
   line-height: 14px;
   padding: 7px;
+  margin-bottom: 20px;
 }
-.panel-login .btn-default {
+.panel-login .btn-default.reg {
   float: right;
   width: 40%;
 }

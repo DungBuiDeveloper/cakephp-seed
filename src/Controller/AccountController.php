@@ -132,21 +132,24 @@ class AccountController extends AppController {
 			$user = $this->Auth->identify();
 
 			if ($user ) {
-				$userEdit = $this->Users->get($user['id']);
-				$userEdit['logins'] = $userEdit['logins'] + 1;
-				$userEdit['last_login'] = new Time();
+				if ($user['active']) {
+					$userEdit = $this->Users->get($user['id']);
+					$userEdit['logins'] = $userEdit['logins'] + 1;
+					$userEdit['last_login'] = new Time();
 
 
-				if ($this->Users->save($userEdit)) {
-					$this->Auth->setUser($user);
-					$this->Flash->success(__('You are now logged in.'));
-					return $this->redirect('/');
+					if ($this->Users->save($userEdit)) {
+						$this->Auth->setUser($user);
+						$this->Flash->success(__('You are now logged in.'));
+						return $this->redirect('/');
+					}
+				}else {
+					$this->Flash->error('User not activated yet,Please check email');
+					return null;
 				}
 
-			}else if($user['active']) {
-				$this->Flash->error('User not activated yet,Please check email');
-				return null;
-			}else {
+			}
+			else {
 				$this->Flash->error('Wrong username/email or password');
 				$this->request->data['password'] = '';
 			}
@@ -191,7 +194,9 @@ class AccountController extends AppController {
 					if(strtotime($dataToken->exp_active) - time() > 0){
 
 						$this->set(compact('user'));
-						return $this->Flash->error("Token has been issued and cannot be reissued after 24 hours ");
+						$this->Flash->error("Token has been issued and cannot be reissued after 24 hours ");
+						return $this->redirect('/');
+
 					}
 				}
 
@@ -327,46 +332,46 @@ class AccountController extends AppController {
 
 	}
 
-	/**
-	 * @return \Cake\Http\Response|null
-	 */
-	public function edit() {
-		$uid = $this->request->session()->read('Auth.User.id');
-		$user = $this->Users->get($uid);
-		$this->Users->addBehavior('Tools.Passwordable', ['require' => false]);
-
-		if ($this->Common->isPosted()) {
-			$fieldList = ['username', 'email', 'pwd', 'pwd_repeat'];
-			$this->Users->patchEntity($user, $this->request->getData(), ['fields' => $fieldList]);
-			if ($this->Users->save($user)) {
-				$this->Flash->success(__('Account modified'));
-
-				$this->Auth->setUser($this->Users->get($uid)->toArray());
-
-				return $this->redirect(['action' => 'index']);
-			}
-			$this->Flash->error(__('formContainsErrors'));
-
-			// Pwd should not be passed to the view again for security reasons.
-			unset($this->request->data['pwd']);
-			unset($this->request->data['pwd_repeat']);
-		}
-
-		$this->set(compact('user'));
-	}
-
-	/**
-	 * @return \Cake\Http\Response|null
-	 * @throws \Cake\Http\Exception\InternalErrorException
-	 */
-	public function delete() {
-		$this->request->allowMethod(['post', 'delete']);
-		$uid = $this->request->session()->read('Auth.User.id');
-		if (!$this->Users->delete($uid)) {
-			throw new InternalErrorException('Cannot delete user');
-		}
-		$this->Flash->success('Account deleted');
-		return $this->redirect(['action' => 'logout']);
-	}
+	// /**
+	//  * @return \Cake\Http\Response|null
+	//  */
+	// public function edit() {
+	// 	$uid = $this->request->session()->read('Auth.User.id');
+	// 	$user = $this->Users->get($uid);
+	// 	$this->Users->addBehavior('Tools.Passwordable', ['require' => false]);
+	//
+	// 	if ($this->Common->isPosted()) {
+	// 		$fieldList = ['username', 'email', 'pwd', 'pwd_repeat'];
+	// 		$this->Users->patchEntity($user, $this->request->getData(), ['fields' => $fieldList]);
+	// 		if ($this->Users->save($user)) {
+	// 			$this->Flash->success(__('Account modified'));
+	//
+	// 			$this->Auth->setUser($this->Users->get($uid)->toArray());
+	//
+	// 			return $this->redirect(['action' => 'index']);
+	// 		}
+	// 		$this->Flash->error(__('formContainsErrors'));
+	//
+	// 		// Pwd should not be passed to the view again for security reasons.
+	// 		unset($this->request->data['pwd']);
+	// 		unset($this->request->data['pwd_repeat']);
+	// 	}
+	//
+	// 	$this->set(compact('user'));
+	// }
+	//
+	// /**
+	//  * @return \Cake\Http\Response|null
+	//  * @throws \Cake\Http\Exception\InternalErrorException
+	//  */
+	// public function delete() {
+	// 	$this->request->allowMethod(['post', 'delete']);
+	// 	$uid = $this->request->session()->read('Auth.User.id');
+	// 	if (!$this->Users->delete($uid)) {
+	// 		throw new InternalErrorException('Cannot delete user');
+	// 	}
+	// 	$this->Flash->success('Account deleted');
+	// 	return $this->redirect(['action' => 'logout']);
+	// }
 
 }

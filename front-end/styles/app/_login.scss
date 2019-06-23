@@ -44,14 +44,18 @@
   .submit {
     input {
       float: left;
-      width: 40%;
+      width: 100%;
       font-size: 14px;
       line-height: 14px;
       padding: 7px;
+      margin-bottom: 20px;
+
     }
   }
   .btn-default {
-    float: right;
-    width: 40%;
+    &.reg{
+      float: right;
+      width: 40%;
+    }
   }
 }

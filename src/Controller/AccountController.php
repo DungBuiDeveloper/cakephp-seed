@@ -22,6 +22,7 @@ class AccountController extends AppController {
 	 * @var string
 	 */
 	public $modelClass = 'Users';
+
 	use MailerAwareTrait;
 	/**
 	 * [activeUser Check JWT for active user]
@@ -87,11 +88,7 @@ class AccountController extends AppController {
 
 	public function register() {
 
-
 		$key = Configure::Read('Site.token_key');
-
-
-
  		$user = $this->Users->newEntity();
  		if ($this->request->is('post')) {
  			$this->Users->addBehavior('Tools.Passwordable');
@@ -110,7 +107,7 @@ class AccountController extends AppController {
 
 				$jwtToken = JWT::encode($token, $key);
 
-				$this->getMailer('User')->send('resetPassword', [$user,$jwtToken]);
+				$this->getMailer('User')->send('register', [$user,$jwtToken]);
 
  				$this->Flash->success('Registered SuccessFully and Please Check Your Email :-)');
  				return $this->redirect('/');
@@ -134,10 +131,8 @@ class AccountController extends AppController {
 		if ($this->Common->isPosted()) {
 			$user = $this->Auth->identify();
 
-			$userEdit = $this->Users->get($user['id']);
-
-			if ($user && $user['active']) {
-
+			if ($user ) {
+				$userEdit = $this->Users->get($user['id']);
 				$userEdit['logins'] = $userEdit['logins'] + 1;
 				$userEdit['last_login'] = new Time();
 
@@ -148,12 +143,14 @@ class AccountController extends AppController {
 					return $this->redirect('/');
 				}
 
-			}else {
+			}else if($user['active']) {
 				$this->Flash->error('User not activated yet,Please check email');
 				return null;
+			}else {
+				$this->Flash->error('Wrong username/email or password');
+				$this->request->data['password'] = '';
 			}
-			$this->Flash->error('Wrong username/email or password');
-			$this->request->data['password'] = '';
+
 		} else {
 			$username = $this->request->getQuery('username');
 			if ($username) {
@@ -182,28 +179,101 @@ class AccountController extends AppController {
 		$user = $this->Users->newEntity();
 
  		if ($this->request->is('post')) {
-			$user = $this->Users->patchEntity($user, $this->request->getData(), ['fields' => ['email'] , 'validate' => 'loseAccount']);
+			$dataUserChecking = $this->Users->findByEmail($this->request->getData()['email'])->toArray();
 
-			if (!$user->hasErrors()) {
-			
+			if ($dataUserChecking) {
+
+				// Step One...
+				$dataUserChecking = $dataUserChecking[0];
+				if ($dataUserChecking['token_reset_password']) {
+					$dataToken = JWT::decode($dataUserChecking['token_reset_password'], Configure::Read('Site.token_key'), array('HS256'));
+
+					if(strtotime($dataToken->exp_active) - time() > 0){
+
+						$this->set(compact('user'));
+						return $this->Flash->error("Token has been issued and cannot be reissued after 24 hours ");
+					}
+				}
+
 				$token = array(
-			    "user_id" => $user->id,
-			    "email" => $user->email,
-			    "username" => $user->username,
-			    "exp_active" => date("Y-m-d h:i:s", time() + 86400),
+					"email" => $this->request->getData()['email'],
+					"exp_active" => date("Y-m-d h:i:s", time() + 86400),
 				);
 
-				$jwtToken = JWT::encode($token, $key);
 
-				$this->getMailer('User')->send('resetPassword', [$user,$jwtToken]);
+				$jwtToken = JWT::encode($token, Configure::Read('Site.token_key'));
 
- 				$this->Flash->success('Check Email Please');
+				$user = $this->Users->patchEntity($dataUserChecking, array('id' => $dataUserChecking['id'] , 'token_reset_password' =>  $jwtToken ),['validate' => 'loseAccount'] );
+
+				//Cheking User
+				if ($this->Users->save($user)) {
+
+					$this->getMailer('User')->send('resetPassword', [$user->email,$jwtToken]);
+
+	 				$this->Flash->success('Check Email Please');
+					return $this->redirect('/');
+
+				}
+			}else {
+				$this->Flash->error('Unregistered email');
 			}
+
  		}
 
 		$this->set(compact('user'));
 
  	}
+
+	public function lostPasswordStepTwo(){
+
+		if(isset($_GET['token'])) {
+			$key = Configure::Read('Site.token_key');
+			$error = null;
+
+			try {
+	    	$userDecode = JWT::decode($_GET['token'], $key, array('HS256'));
+
+
+
+				if (!strtotime($userDecode->exp_active) - time() > 0) {
+
+					$this->Flash->error("Token has been issued and cannot be reissued after 24 hours ");
+					return $this->redirect('/account/lost-password');
+
+				}
+
+
+
+			} catch (\Exception $e) {
+				$error = 'Invalid Token';
+				$this->set(compact('error'));
+			}
+
+
+			$user = $this->Users->findByEmail($userDecode->email)->first();
+
+			$this->Users->addBehavior('Tools.Passwordable', ['minLength' => 1 , 'maxLength' => 255]);
+
+
+			if ($this->request->is('put')) {
+
+				$user = $this->Users->patchEntity($user, $this->request->getData(), ['fields' => ['pwd', 'pwd_repeat']]);
+
+				if ($this->Users->save($user)) {
+					$this->Flash->success(__('new pw saved - you may now log in'));
+					return $this->redirect('/login');
+				}
+			}
+			$this->set(compact('user'));
+
+
+
+		}
+		else {
+			$error = 'Invalid Token';
+			$this->set(compact('error'));
+		}
+	}
 
 	/**
 	 * @return \Cake\Http\Response|null

@@ -4,6 +4,9 @@ namespace App\Model\Table;
 use Tools\Model\Table\Table;
 use Cake\ORM\Query;
 use Cake\Validation\Validator;
+use \Firebase\JWT\JWT;
+use Cake\Core\Configure;
+
 
 class UsersTable extends Table {
 
@@ -11,20 +14,26 @@ class UsersTable extends Table {
 
   public function validationloseAccount(Validator $validator){
 
+    $user;
     $validator
       ->notEmpty('email', __("You must set an Email"))
       ->add('email', 'custom', [
 		    'rule' => function ($value, $context) {
+          $user = $this->findByEmail($value)->toList();
+      
+          $dataToken = JWT::decode($user[0]['token_reset_password'], Configure::Read('Site.token_key'), array('HS256'));
 
-					if (sizeof($this->findByEmail($value)->toList()) === 0) {
-						return false;
-					}
+
+					if (sizeof($user) === 0) {
+						return __("Unregistered email");
+					}else if(strtotime($dataToken->exp_active) - time() > 0){
+            return __("Token has been issued and cannot be reissued after 24 hours ");
+          }
 		      return true;
 		    },
 		    'message' => __("Unregistered email")
 			]);
 
-      // $this->Users->findByEmail();
     return $validator;
   }
 

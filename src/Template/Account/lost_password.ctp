@@ -16,25 +16,14 @@
 	echo $this->Form->control('email', ['label' => __('Email')]);
 
 
-	echo $this->Form->submit(__('Submit'));
+	echo $this->Form->submit(__('Submit'),['name' => 'enter-email']);
 	?>
 	</fieldset>
 <?php echo $this->Form->end();?>
-<br/>
-<?php echo $this->Form->create($user);?>
-	<fieldset id="step-2">
- 		<legend><?php echo __('Step {0}', 2);?></legend>
- 		<p>
-			Click on the link in the email or Copy-and-Paste your received token here:
- 		</p>
-	<?php
-	echo $this->Form->control('Form.key', ['autocomplete' => 'off']);
 
-	echo $this->Form->submit(__('Submit'));
-	?>
-	</fieldset>
-<?php echo $this->Form->end();?>
-</div>
+
+	</div>
+
 
 
 <br/><br/>

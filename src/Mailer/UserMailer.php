@@ -18,12 +18,13 @@ class UserMailer extends Mailer
             ->template('register');
     }
 
-    public function resetPassword($user)
+    public function resetPassword($email,$jwtToken)
     {
         $this
-            ->to($user->email)
-            ->subject('Reset password')
-            ->set(['token' => $user->token]);
+          ->to($email)
+          ->emailFormat('html')
+          ->subject('Reset password DevAnt')
+          ->set(['token' => $jwtToken]);
     }
 }
 

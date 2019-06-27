@@ -29,5 +29,6 @@ class PagesController extends AppController
     public function index(){
       $title = 'home title';
       $this->set(compact('title'));
+      
     }
 }

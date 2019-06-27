@@ -13,7 +13,8 @@
  * @license   https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace App\Controller;
-
+use Cake\ORM\TableRegistry;
+use Cake\ORM\Query;
 
 /**
  * Static content controller
@@ -27,8 +28,28 @@ class PagesController extends AppController
 
 
     public function index(){
+      $articlesTable = TableRegistry::getTableLocator()->get('Articles');
+      $queryArticles = $articlesTable->find();
+
+
+      $ArticlesLastest =
+        $queryArticles
+        ->contain('Users', function (Query $q) {
+          return $q
+            ->select(['username', 'email'])
+            ->order(['Users.id' => 'DESC'])
+            ->where(['Users.active' => true]);
+        })
+        ->contain(['Categories','Categories.ChildCategories',
+      'Categories.ParentCategories'])
+      ->limit(5)
+      ->where(['published'=>1])
+        ->toArray();
+
+
+
       $title = 'home title';
       $this->set(compact('title'));
-      
+
     }
 }

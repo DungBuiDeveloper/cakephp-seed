@@ -34,7 +34,9 @@ class AppView extends View
      *
      * @return void
      */
-    public function initialize()
-    {
+    public function initialize() {
+      $this->loadHelper('Paginator', [
+          'templates' => 'paginator-templates'
+      ]);
     }
 }

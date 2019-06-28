@@ -58,6 +58,8 @@
   "dependencies": {
     "bootstrap": "^3.3.5",
     "jquery": "^3.4.1",
-    "jquery-validation": "^1.19.1"
+    "jquery-validation": "^1.19.1",
+    "shave": "^2.5.4",
+    "slick-carousel": "^1.8.1"
   }
 }

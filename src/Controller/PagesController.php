@@ -15,6 +15,7 @@
 namespace App\Controller;
 use Cake\ORM\TableRegistry;
 use Cake\ORM\Query;
+use Cake\Database\Expression\QueryExpression;
 
 /**
  * Static content controller
@@ -28,10 +29,13 @@ class PagesController extends AppController
 
 
     public function index(){
+      $title = 'Home';
       $articlesTable = TableRegistry::getTableLocator()->get('Articles');
       $queryArticles = $articlesTable->find();
+      $queryArticlesCat = $articlesTable->find();
+      $queryArticlesRate = $articlesTable->find();
 
-
+      //Get Articles Lastest
       $ArticlesLastest =
         $queryArticles
         ->contain('Users', function (Query $q) {
@@ -41,15 +45,41 @@ class PagesController extends AppController
             ->where(['Users.active' => true]);
         })
         ->contain(['Categories','Categories.ChildCategories',
-      'Categories.ParentCategories'])
-      ->limit(5)
-      ->where(['published'=>1])
+      'Categories.ParentCategories','Tags'])
+        ->limit(5)
+        ->where(['published'=>1])
         ->toArray();
 
+        //Get Articles in Categories PickUp
+        $CatPickup = TableRegistry::getTableLocator()->get('pick_up')
+          ->find()
+          ->where(function (QueryExpression $exp, Query $q) {
+              return $exp->eq('type', 'category');
+          })
+          ->first();
+
+        $CatPickup = array_map('intval', explode(",",$CatPickup['id_pickup']));
 
 
-      $title = 'home title';
-      $this->set(compact('title'));
+        $ArticlesCatPickup =
+          $queryArticlesCat
+          ->innerJoinWith('Categories', function ($eq) use ($CatPickup) {
+              return $eq->where(function (QueryExpression $exp, Query $q) use ($CatPickup) {
+                return $exp->in('Categories.id', $CatPickup);
+              });
+          })
+          ->toArray();
+
+
+          $ArticlesRateFive =
+            $queryArticlesRate
+              ->where(function (QueryExpression $exp){
+                return $exp->gte('rate' , '4');
+              })
+              ->toArray();
+
+
+      $this->set(compact('title','ArticlesRateFive','ArticlesCatPickup','ArticlesLastest'));
 
     }
 }

@@ -1,5 +1,6 @@
-@import 'vendor/bootstrap/main';
+@import "~bootstrap/dist/css/bootstrap.min.css";
 $slick-font-path: "~slick-carousel/slick/fonts/";
 $slick-loader-path: "~slick-carousel/slick/";
 @import "~slick-carousel/slick/slick.scss";
 @import "~slick-carousel/slick/slick-theme.scss";
+@import "~dropzone/dist/min/dropzone.min.css";

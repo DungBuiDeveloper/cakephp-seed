@@ -66,5 +66,9 @@ use Cake\Core\Configure;
       $this->fetch('script')
     ?>
     <?= $this->Flash->render() ?>
+
+    <?php echo $this->element('common/loading'); ?>
+
+
 </body>
 </html>

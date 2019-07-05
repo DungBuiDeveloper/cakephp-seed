@@ -3,7 +3,10 @@
 ?>
 <div class="container-fluid">
 
-  <div class="slider-lastest">
+
+
+
+<div class="slider-lastest">
   <?php foreach ($ArticlesLastest as $article): ?>
 
 
@@ -75,10 +78,8 @@
   <?php endforeach; ?>
 
 
-
-
-
 </div>
+
 
 
 </div>

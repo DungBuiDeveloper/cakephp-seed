@@ -17,10 +17,10 @@
     </ul>
 </nav>
 <div class="articles form large-9 medium-8 columns content">
-    <?= $this->Form->create($article) ?>
+    <?= $this->Form->create($article , ['type' => 'file','id' => 'article_submit']) ?>
     <fieldset>
         <legend><?= __('Add Article') ?></legend>
-        <?php
+          <?php
             echo $this->Form->control('user_id', ['options' => $users]);
             echo $this->Form->control('title');
             echo $this->Form->control('slug');
@@ -28,8 +28,14 @@
             echo $this->Form->control('published');
             echo $this->Form->control('categories._ids', ['options' => $categories]);
             echo $this->Form->control('tags._ids', ['options' => $tags]);
-        ?>
+            echo $this->Form->control('image_feture', ['type' => 'text']);
+          ?>
+
+          <div id="myDropzone" class="dropzone">
+
+          </div>
+
     </fieldset>
-    <?= $this->Form->button(__('Submit')) ?>
+    <?= $this->Form->button('Submit' , ['id'=>'dropzoneSubmit'] ) ?>
     <?= $this->Form->end() ?>
 </div>

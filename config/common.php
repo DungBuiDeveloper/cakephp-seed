@@ -12,5 +12,9 @@ return [
         'description' => 'Performance CakePHP 3.*',
         'contact_email' => 'dungbui.dev@gmail.com',
         'token_key' => 'n3i6C2NFztxGxYMQKiMnFPewbQ9A0EVt'
+    ],
+    'Upload' => [
+      'upload_dir' => '/uploads/',
+      'upload_file_type' => []
     ]
 ];

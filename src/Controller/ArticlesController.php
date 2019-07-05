@@ -1,8 +1,7 @@
 <?php
 namespace App\Controller;
-
 use App\Controller\AppController;
-
+use App\Utility\FileUpload;
 /**
  * Articles Controller
  *
@@ -43,27 +42,39 @@ class ArticlesController extends AppController
         $this->set('article', $article);
     }
 
+
+   public function uploadImage() {
+    $typeFile = ['jpg','png','jpeg'];
+    $upload_dir = '/uploads/articles/';
+    $upload = $this->Upload($typeFile,$upload_dir);
+    echo json_encode($upload);
+    die();
+  }
+
+
     /**
      * Add method
      *
      * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
      */
-    public function add()
-    {
-        $article = $this->Articles->newEntity();
-        if ($this->request->is('post')) {
-            $article = $this->Articles->patchEntity($article, $this->request->getData());
-            if ($this->Articles->save($article)) {
-                $this->Flash->success(__('The article has been saved.'));
+    public function add() {
+      $article = $this->Articles->newEntity();
+      if ($this->request->is('post')) {
+          $article = $this->Articles->patchEntity($article, $this->request->getData());
 
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('The article could not be saved. Please, try again.'));
-        }
-        $users = $this->Articles->Users->find('list', ['limit' => 200]);
-        $categories = $this->Articles->Categories->find('list', ['limit' => 200]);
-        $tags = $this->Articles->Tags->find('list', ['limit' => 200]);
-        $this->set(compact('article', 'users', 'categories', 'tags'));
+          if ($this->Articles->save($article)) {
+              $this->Flash->success(__('The article has been saved.'));
+
+              return $this->redirect(['action' => 'index']);
+          }else {
+            dd($article->errors());
+          }
+          $this->Flash->error(__('The article could not be saved. Please, try again.'));
+      }
+      $users = $this->Articles->Users->find('list', ['limit' => 200]);
+      $categories = $this->Articles->Categories->find('list', ['limit' => 200]);
+      $tags = $this->Articles->Tags->find('list', ['limit' => 200]);
+      $this->set(compact('article', 'users', 'categories', 'tags'));
     }
 
     /**

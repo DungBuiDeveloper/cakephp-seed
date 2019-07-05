@@ -40,6 +40,7 @@ class Article extends Entity
         'modified' => true,
         'user' => true,
         'categories' => true,
-        'tags' => true
+        'tags' => true,
+        'image_feture' => true
     ];
 }

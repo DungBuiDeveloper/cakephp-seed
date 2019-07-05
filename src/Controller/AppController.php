@@ -97,4 +97,68 @@ class AppController extends Controller {
 		}
 	}
 
+
+
+	/**
+	 * [Uploadload Function Uplaod For all Site]
+	 * @param array  $typeFile   [typefile require]
+	 * @param string $upload_dir [upload direction default 'upload/' option]
+	 */
+	public function Upload($typeFile = [] , $upload_dir = '') {
+
+		$url_return = array();
+		//Config TypeFile
+		if (sizeof($typeFile) > 0) {
+			Configure::write('Upload.upload_file_type',$typeFile);
+		}
+		else {
+			echo 'setting type file';
+			$this->response->statusCode(400);
+			die();
+		}
+		//Config Upload Dir
+		if ($upload_dir !== '') {
+			Configure::write('Upload.upload_dir',$upload_dir);
+		}
+		$configUpload = Configure::Read('Upload');
+
+		$storeFolder = WWW_ROOT.$configUpload['upload_dir'];
+
+		// if folder doesn't exists, create it
+		if(!file_exists($storeFolder) && !is_dir($storeFolder)) {
+		  mkdir($storeFolder);
+		}
+
+		// upload files to $storeFolder
+		if (!empty($_FILES)) {
+
+			foreach ($_FILES['file']['name'] as $key => $value) {
+				if (!in_array(pathinfo($value, PATHINFO_EXTENSION), $configUpload['upload_file_type'])) {
+					$this->response->type('json');
+					$this->response->statusCode(400);
+					$this->response->body(json_encode(array('status' => 'ERROR', 'message' => 'File Type Not Valid')));
+        	$this->response->send();
+        	$this->_stop();
+					die();
+				}
+			}
+
+
+
+		  foreach($_FILES['file']['tmp_name'] as $key => $value) {
+
+        $tempFile = $_FILES['file']['tmp_name'][$key];
+
+        $targetFile =  $storeFolder.uniqid().$_FILES['file']['name'][$key];
+
+        if (move_uploaded_file($tempFile,$targetFile)) {
+					array_push( $url_return , str_replace(WWW_ROOT,"",$targetFile) );
+        }
+	    }
+
+		}
+
+		return $url_return;
+	}
+
 }

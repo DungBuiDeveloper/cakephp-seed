@@ -1,3 +1,4 @@
+//Shave Dot Dot Dot
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory() :
   typeof define === 'function' && define.amd ? define(factory) :
@@ -89,7 +90,3 @@
 const startTime = new Date();
 
 $('.js-body-dot').shave(80);
-
-// const endTime = new Date();
-// const elapsed = endTime - startTime;
-// $('.elapsed').html(`${elapsed} ms`);

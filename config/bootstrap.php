@@ -205,5 +205,4 @@ Type::build('timestamp')
 //Inflector::rules('transliteration', ['/å/' => 'aa']);
 
 
-// $this->addPlugin('AuthSandbox', ['routes' => true]);
-//
+$this->addPlugin('FileManager', ['bootstrap' => true, 'routes' => true]);

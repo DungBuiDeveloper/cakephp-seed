@@ -13,6 +13,7 @@
         "dereuromark/cakephp-tools": "^1.9",
         "firebase/php-jwt": "^5.0",
         "imagine/imagine": "^1.2",
+        "league/flysystem": "^1.0",
         "mobiledetect/mobiledetectlib": "2.*"
     },
     "require-dev": {
@@ -28,16 +29,18 @@
         "dereuromark/cakephp-ide-helper": "After baking your code, this keeps your annotations in sync with the code evolving from there on for maximum IDE and PHPStan compatibility."
     },
     "autoload": {
-        "psr-4": {
-            "App\\": "src/"
-        }
-    },
+  		"psr-4": {
+  			"App\\": "src/",
+  			"FileManager\\": "plugins/FileManager/src/"
+  		}
+  	},
     "autoload-dev": {
-        "psr-4": {
-            "App\\Test\\": "tests/",
-            "Cake\\Test\\": "vendor/cakephp/cakephp/tests/"
-        }
-    },
+  		"psr-4": {
+  			"App\\Test\\": "tests/",
+  			"FileManager\\Test\\": "plugins/FileManager/tests/",
+  			"Cake\\Test\\": "./vendor/cakephp/cakephp/tests/"
+  		}
+  	},
     "scripts": {
         "post-install-cmd": "App\\Console\\Installer::postInstall",
         "post-create-project-cmd": "App\\Console\\Installer::postInstall",

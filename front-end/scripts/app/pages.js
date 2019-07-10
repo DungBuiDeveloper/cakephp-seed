@@ -1,3 +1,6 @@
+
+
+
 // disable auto discover
 Dropzone.autoDiscover = false;
 // init dropzone on id (form or div)
@@ -32,6 +35,8 @@ $( document ).ready(() => {
       dictDefaultMessage: "Drop files here to upload",
     });
   }
+
+
 
 
 }); // End document
@@ -81,3 +86,7 @@ Dropzone.options.myDropzone = {
         });
     }
 };
+
+// CKEDITOR.replace( 'articleBox' , {
+//    customConfig: '/ckeditor/config/config.js'
+// });

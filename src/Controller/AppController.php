@@ -55,7 +55,6 @@ class AppController extends Controller {
 			],
 			'authError' => __d('cake', 'facking')
 		];
-		// $this->Auth->config($config);
 		$this->Auth->setConfig($config);
 
 		// Make sure you can't access login etc when already logged in
@@ -70,6 +69,7 @@ class AppController extends Controller {
 		if (!$this->AuthUser->id()) {
 			return null;
 		}
+
 
 		foreach ($allowed as $controller => $actions) {
 
@@ -104,7 +104,7 @@ class AppController extends Controller {
 	 * @param array  $typeFile   [typefile require]
 	 * @param string $upload_dir [upload direction default 'upload/' option]
 	 */
-	public function Upload($typeFile = [] , $upload_dir = '') {
+	public function Upload($typeFile = [] , $upload_dir = '' , $name = 'file') {
 
 		$url_return = array();
 		//Config TypeFile
@@ -132,33 +132,47 @@ class AppController extends Controller {
 		// upload files to $storeFolder
 		if (!empty($_FILES)) {
 
-			foreach ($_FILES['file']['name'] as $key => $value) {
-				if (!in_array(pathinfo($value, PATHINFO_EXTENSION), $configUpload['upload_file_type'])) {
-					$this->response->type('json');
-					$this->response->statusCode(400);
-					$this->response->body(json_encode(array('status' => 'ERROR', 'message' => 'File Type Not Valid')));
-        	$this->response->send();
-        	$this->_stop();
-					die();
+			//If FILE NAME IS Array
+			if (is_array($_FILES[$name]['name'])) {
+				foreach ($_FILES[$name]['name'] as $key => $value) {
+					if (!in_array(pathinfo($value, PATHINFO_EXTENSION), $configUpload['upload_file_type'])) {
+						$this->response->type('json');
+						$this->response->statusCode(400);
+						$this->response->body(json_encode(array('status' => 'ERROR', 'message' => 'File Type Not Valid')));
+	        	$this->response->send();
+	        	$this->_stop();
+						die();
+					}
+				}
+			}
+
+			if (is_array($_FILES[$name]['name'])) {
+				foreach($_FILES[$name]['tmp_name'] as $key => $value) {
+
+	        $tempFile = $_FILES[$name]['tmp_name'][$key];
+
+	        $targetFile =  $storeFolder.uniqid().$_FILES[$name]['name'][$key];
+
+	        if (move_uploaded_file($tempFile,$targetFile)) {
+						array_push( $url_return , str_replace(WWW_ROOT,"",$targetFile) );
+	        }
+		    }
+				return $url_return;
+			}else {
+				$tempFile = $_FILES[$name]['tmp_name'];
+
+				$targetFile =  $storeFolder.uniqid().$_FILES[$name]['name'];
+				if (move_uploaded_file($tempFile,$targetFile)) {
+					return str_replace(WWW_ROOT,"",$targetFile);
 				}
 			}
 
 
 
-		  foreach($_FILES['file']['tmp_name'] as $key => $value) {
-
-        $tempFile = $_FILES['file']['tmp_name'][$key];
-
-        $targetFile =  $storeFolder.uniqid().$_FILES['file']['name'][$key];
-
-        if (move_uploaded_file($tempFile,$targetFile)) {
-					array_push( $url_return , str_replace(WWW_ROOT,"",$targetFile) );
-        }
-	    }
 
 		}
 
-		return $url_return;
+
 	}
 
 }

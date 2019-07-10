@@ -33,8 +33,10 @@
             echo $this->Form->control('body');
             echo $this->Form->control('published');
             echo $this->Form->control('categories._ids', ['options' => $categories]);
+
             echo $this->Form->control('tags._ids', ['options' => $tags]);
         ?>
+
     </fieldset>
     <?= $this->Form->button(__('Submit')) ?>
     <?= $this->Form->end() ?>

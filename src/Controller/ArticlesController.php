@@ -26,6 +26,11 @@ class ArticlesController extends AppController
         $this->set(compact('articles'));
     }
 
+    public function ckeditor($value='')
+    {
+      $this->layout = false;
+    }
+
     /**
      * View method
      *
@@ -50,6 +55,26 @@ class ArticlesController extends AppController
     echo json_encode($upload);
     die();
   }
+
+  public function uploadImageCk()
+  {
+
+    $typeFile = ['jpg','png','jpeg'];
+    $upload_dir = '/uploads/articles/';
+    $upload = $this->Upload($typeFile,$upload_dir,'upload');
+
+    $type = $_GET['type'];
+    $CKEditor = $_GET['CKEditor'];
+    $funcNum  = $_GET['CKEditorFuncNum'];
+
+
+    if ($upload) {
+      echo '<script>window.parent.CKEDITOR.tools.callFunction('.$funcNum.', "'.$upload.'", "'.$message.'")</script>';
+    }
+
+
+  }
+
 
 
     /**

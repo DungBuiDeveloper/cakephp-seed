@@ -32,7 +32,8 @@ class ArticlesTable extends Table
      * @param array $config The configuration for the Table.
      * @return void
      */
-    public function initialize(array $config) {
+    public function initialize(array $config)
+    {
         parent::initialize($config);
 
         $this->setTable('articles');
@@ -55,8 +56,6 @@ class ArticlesTable extends Table
             'targetForeignKey' => 'tag_id',
             'joinTable' => 'articles_tags'
         ]);
-
-
     }
 
     /**
@@ -91,6 +90,24 @@ class ArticlesTable extends Table
         $validator
             ->boolean('published')
             ->allowEmptyString('published');
+
+        $validator
+            ->scalar('image_feture')
+            ->maxLength('image_feture', 255)
+            ->requirePresence('image_feture', 'create')
+            ->allowEmptyFile('image_feture', false);
+
+        $validator
+            ->integer('count')
+            ->allowEmptyString('count');
+
+        $validator
+            ->integer('rate')
+            ->allowEmptyString('rate');
+
+        $validator
+            ->integer('total_rate')
+            ->allowEmptyString('total_rate');
 
         return $validator;
     }

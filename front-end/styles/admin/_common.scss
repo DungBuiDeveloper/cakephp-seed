@@ -1,0 +1,40 @@
+.form-control {
+  border-radius: 5px;
+}
+.bs3 .btn-default {
+  background: none;
+}
+.dropzone {
+  display: block;
+  border: 4px dotted #3b8dbc;
+  display: -webkit-flex;
+  display: -ms-flex;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 15px;
+}
+.dropzone.dz-drag-hover {
+  border: 4px dotted red;
+}
+.dropzone.dz-clickable .dz-message, .dropzone.dz-clickable .dz-message * {
+  margin: 0;
+}
+.dz-message .fa {
+  font-size: 50px;
+  color: #3b8dbc;
+}
+.dropzone.dz-drag-hover .dz-message .fa {
+  color: red;
+}
+
+.just-form .box-body {
+  padding: 10px 50px;
+}
+.alert
+{
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 99999999;
+}

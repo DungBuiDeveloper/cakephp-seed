@@ -8,9 +8,7 @@ const plugins = {
     const { CleanWebpackPlugin } = require('clean-webpack-plugin')
     return CleanWebpackPlugin
   })(),
-  extractCSS: require('mini-css-extract-plugin'),
-  sync: require('browser-sync-webpack-plugin'),
-  sri: require('webpack-subresource-integrity')
+  extractCSS: require('mini-css-extract-plugin')
 }
 
 module.exports = (env = {}, argv) => {
@@ -28,6 +26,10 @@ module.exports = (env = {}, argv) => {
         './styles/app.scss',
         './scripts/app.js'
       ],
+      admin: [
+        './styles/admin.scss',
+        './scripts/admin.js'
+      ],
       error:[
         './styles/error.scss'
       ]
@@ -39,7 +41,6 @@ module.exports = (env = {}, argv) => {
       filename: 'js/[name].js',
       crossOriginLoading: 'anonymous'
     },
-
     module: {
       rules: [
         {
@@ -165,30 +166,7 @@ module.exports = (env = {}, argv) => {
         })
       ]
 
-      const production = [
-        new plugins.clean(),
-        new plugins.sri({
-          hashFuncNames: ['sha384'],
-          enabled: true
-        })
-      ]
-
-      const development = [
-        new plugins.sync(
-          {
-            host: 'localhost',
-            port: 9090,
-            proxy: 'http://localhost:8080/'
-          },
-          {
-            reload: false
-          }
-        )
-      ]
-
-      return isProduction
-        ? common.concat(production)
-        : common.concat(development)
+      return common
     })(),
 
     devtool: (() => {

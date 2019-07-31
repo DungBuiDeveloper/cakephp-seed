@@ -18,11 +18,10 @@ class AppController extends Controller {
 	 */
 	public $components = ['Tools.Common','TinyAuth.Auth', 'TinyAuth.AuthUser'];
 
-
 	public function beforeFilter(Event $event) {
 		parent::beforeFilter($event);
 		$this->loadComponent('Flash');
-
+		$this->loadComponent('Cookie');
 		$config = [
 			'authenticate' => [
 				'Tools.MultiColumn' => [
@@ -44,16 +43,16 @@ class AppController extends Controller {
 			'loginRedirect' => [
 				'plugin' => false,
 				'prefix' => false,
-				'controller' => 'Account',
+				'controller' => 'pages',
 				'action' => 'index'
 			],
 			'loginAction' => [
 				'plugin' => false,
 				'prefix' => false,
-				'controller' => 'Account',
+				'controller' => 'account',
 				'action' => 'login'
 			],
-			'authError' => __d('cake', 'facking')
+			'authError' => __d('cake', 'You are not auth')
 		];
 		$this->Auth->setConfig($config);
 
@@ -66,22 +65,26 @@ class AppController extends Controller {
 		if ($this->name === "Account") {
 			$this->viewBuilder()->setLayout('account');
 		}
+		if ($this->request->prefix === 'admin') {
+			$this->viewBuilder()->setLayout('admin');
+		}
+
 		if (!$this->AuthUser->id()) {
+			$this->Auth->setUser($this->Cookie->read('user'));
 			return null;
+		}else {
+
+
+			// $this->Auth->setUser($user);
 		}
 
 
 		foreach ($allowed as $controller => $actions) {
-
-
 			if ($this->name === $controller && in_array($this->request->param('action'), $actions)) {
 				$this->Flash->info('The page you tried to access is not relevant if you are already logged in. Redirected to main page.');
 				return $this->redirect('/');
 			}
 		}
-
-
-
 	}
 
 	/**
@@ -91,7 +94,6 @@ class AppController extends Controller {
 	 */
 	public function beforeRender(Event $event) {
 		parent::beforeRender($event);
-
 		if (Configure::read('debug')) {
 			$this->disableCache();
 		}

@@ -3,14 +3,7 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Article $article
  */
-
 ?>
-<script type="text/javascript" src="/ckeditor/ckeditor.js"></script>
-
-
-
-
-
 <nav class="large-3 medium-4 columns" id="actions-sidebar">
     <ul class="side-nav">
         <li class="heading"><?= __('Actions') ?></li>
@@ -24,51 +17,23 @@
     </ul>
 </nav>
 <div class="articles form large-9 medium-8 columns content">
-    <?= $this->Form->create($article , ['type' => 'file','id' => 'article_submit']) ?>
+    <?= $this->Form->create($article) ?>
     <fieldset>
         <legend><?= __('Add Article') ?></legend>
-
-        <div class="form-group">
-            <?= $this->Form->label('content', __d('admin', 'Content'), ['class' => 'col-sm-2 control-label']) ?>
-            <div class="col-sm-12">
-                <?= $this->Form->input(
-                        'content', [
-                            'label' => false,
-                            'class' => 'form-control articleBox',
-                            'id' => 'articleBox'
-                        ]
-                    ) ?>
-            </div>
-        </div>
-          <?php
+        <?php
             echo $this->Form->control('user_id', ['options' => $users]);
             echo $this->Form->control('title');
             echo $this->Form->control('slug');
-
-
-
-
+            echo $this->Form->control('body');
             echo $this->Form->control('published');
+            echo $this->Form->control('image_feture');
+            echo $this->Form->control('count');
+            echo $this->Form->control('rate');
+            echo $this->Form->control('total_rate');
             echo $this->Form->control('categories._ids', ['options' => $categories]);
             echo $this->Form->control('tags._ids', ['options' => $tags]);
-            echo $this->Form->control('image_feture', ['type' => 'text']);
-          ?>
-
-
-
-          <div id="myDropzone" class="dropzone">
-
-          </div>
-
+        ?>
     </fieldset>
-    <?= $this->Form->button('Submit' , ['id'=>'dropzoneSubmit'] ) ?>
+    <?= $this->Form->button(__('Submit')) ?>
     <?= $this->Form->end() ?>
 </div>
-
-<script type="text/javascript">
-
-    CKEDITOR.replace('articleBox', {
-      customConfig: 'config/article.js',
-      filebrowserImageUploadUrl: '/articles/uploadImageCk/?type=image'
-    });
-</script>

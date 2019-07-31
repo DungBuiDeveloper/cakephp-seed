@@ -26,6 +26,10 @@
                 <th scope="col"><?= $this->Paginator->sort('title') ?></th>
                 <th scope="col"><?= $this->Paginator->sort('slug') ?></th>
                 <th scope="col"><?= $this->Paginator->sort('published') ?></th>
+                <th scope="col"><?= $this->Paginator->sort('image_feture') ?></th>
+                <th scope="col"><?= $this->Paginator->sort('count') ?></th>
+                <th scope="col"><?= $this->Paginator->sort('rate') ?></th>
+                <th scope="col"><?= $this->Paginator->sort('total_rate') ?></th>
                 <th scope="col"><?= $this->Paginator->sort('created') ?></th>
                 <th scope="col"><?= $this->Paginator->sort('modified') ?></th>
                 <th scope="col" class="actions"><?= __('Actions') ?></th>
@@ -39,9 +43,12 @@
                 <td><?= h($article->title) ?></td>
                 <td><?= h($article->slug) ?></td>
                 <td><?= h($article->published) ?></td>
+                <td><?= h($article->image_feture) ?></td>
+                <td><?= $this->Number->format($article->count) ?></td>
+                <td><?= $this->Number->format($article->rate) ?></td>
+                <td><?= $this->Number->format($article->total_rate) ?></td>
                 <td><?= h($article->created) ?></td>
                 <td><?= h($article->modified) ?></td>
-                <td><?= h($article->image_feture) ?></td>
                 <td class="actions">
                     <?= $this->Html->link(__('View'), ['action' => 'view', $article->id]) ?>
                     <?= $this->Html->link(__('Edit'), ['action' => 'edit', $article->id]) ?>

@@ -35,8 +35,24 @@
             <td><?= h($article->slug) ?></td>
         </tr>
         <tr>
+            <th scope="row"><?= __('Image Feture') ?></th>
+            <td><?= h($article->image_feture) ?></td>
+        </tr>
+        <tr>
             <th scope="row"><?= __('Id') ?></th>
             <td><?= $this->Number->format($article->id) ?></td>
+        </tr>
+        <tr>
+            <th scope="row"><?= __('Count') ?></th>
+            <td><?= $this->Number->format($article->count) ?></td>
+        </tr>
+        <tr>
+            <th scope="row"><?= __('Rate') ?></th>
+            <td><?= $this->Number->format($article->rate) ?></td>
+        </tr>
+        <tr>
+            <th scope="row"><?= __('Total Rate') ?></th>
+            <td><?= $this->Number->format($article->total_rate) ?></td>
         </tr>
         <tr>
             <th scope="row"><?= __('Created') ?></th>

@@ -5,21 +5,10 @@
 Dropzone.autoDiscover = false;
 // init dropzone on id (form or div)
 $( document ).ready(() => {
-  
-  if ($('.slider-lastest').length) {
-    $('.slider-lastest').slick({
-      infinite: true,
-      slidesToShow: 3,
-      slidesToScroll: 3
-    });
-  }
 
-
-
-  //Call Dropzone
   if ($('#myDropzone').length) {
     var myDropzone = new Dropzone("#myDropzone", {
-      url: "/articles/uploadImage",
+      url: "/admin/articles/uploadImage",
       paramName: "file",
       autoProcessQueue: false,
       uploadMultiple: true, // uplaod files in a single request
@@ -42,15 +31,63 @@ $( document ).ready(() => {
 
 
 
+  /**
+   * [Setting article for add]
+   * @type {Boolean}
+   */
+  if ($('#article_add_submit').length) {
 
+    $('#categories').attr('multiple','');
+    $('#categories').selectpicker({
+      liveSearch:true,
+      multipleSeparator:','
+    });
+
+
+    $('#tags').attr('multiple','');
+    $('#tags').selectpicker({
+      liveSearch:true,
+      multipleSeparator:','
+    });
+    // $('#tags').val('');
+    // $('#categories').val('');
+
+
+    $('#categories').selectpicker('refresh');
+    $('#tags').selectpicker('refresh');
+
+  }
+
+
+  /**
+   * [Setting article for Edit]
+   * @type {Boolean}
+   */
+  if ($('#article_edit_submit').length) {
+    $('#categories').attr('multiple','');
+    $('#categories').selectpicker({
+      liveSearch:true,
+      multipleSeparator:','
+    });
+
+
+
+    $('#tags').attr('multiple','');
+    $('#tags').selectpicker({
+      liveSearch:true,
+      multipleSeparator:','
+    });
+
+
+    $('#categories').selectpicker('refresh');
+    $('#tags').selectpicker('refresh');
+
+  }
 }); // End document
 
 
 
 
-
-
-//Dropzone Config
 Dropzone.options.myDropzone = {
     // The setting up of the dropzone
     init: function() {
@@ -62,10 +99,10 @@ Dropzone.options.myDropzone = {
             e.preventDefault();
             e.stopPropagation();
 
-            if (myDropzone.files != "") {
+            if (myDropzone.files.length !== 0) {
                 myDropzone.processQueue();
             } else {
-              $("#myDropzone").submit();
+              $("#article_add_submit").submit();
             }
 
             $('#loader-ajax-devant').addClass('active');
@@ -80,11 +117,10 @@ Dropzone.options.myDropzone = {
 
         // on success
         this.on("successmultiple", function(file,response) {
-          console.log();
-          console.log("");
+
 
           $('#image-feture').val(JSON.parse(response)[0]);
-          $("#article_submit").submit();
+          $("#article_add_submit").submit();
 
         });
     }

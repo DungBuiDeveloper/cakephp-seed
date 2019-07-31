@@ -12,6 +12,10 @@ use Cake\ORM\Entity;
  * @property string $slug
  * @property string|null $body
  * @property bool|null $published
+ * @property string $image_feture
+ * @property int|null $count
+ * @property int|null $rate
+ * @property int|null $total_rate
  * @property \Cake\I18n\FrozenTime|null $created
  * @property \Cake\I18n\FrozenTime|null $modified
  *
@@ -36,11 +40,14 @@ class Article extends Entity
         'slug' => true,
         'body' => true,
         'published' => true,
+        'image_feture' => true,
+        'count' => true,
+        'rate' => true,
+        'total_rate' => true,
         'created' => true,
         'modified' => true,
         'user' => true,
         'categories' => true,
-        'tags' => true,
-        'image_feture' => true
+        'tags' => true
     ];
 }

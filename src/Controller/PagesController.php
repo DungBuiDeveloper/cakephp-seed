@@ -78,8 +78,8 @@ class PagesController extends AppController
               })
               ->toArray();
 
-
-      $this->set(compact('title','ArticlesRateFive','ArticlesCatPickup','ArticlesLastest'));
+              $a = "<a href='javascript:;'>asdasd</a>";
+      $this->set(compact('title','ArticlesRateFive','ArticlesCatPickup','ArticlesLastest','a'));
 
     }
 }

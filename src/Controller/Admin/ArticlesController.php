@@ -1,5 +1,5 @@
 <?php
-namespace App\Controller;
+namespace App\Controller\Admin;
 use App\Controller\AppController;
 use App\Utility\FileUpload;
 /**
@@ -16,32 +16,32 @@ class ArticlesController extends AppController
      *
      * @return \Cake\Http\Response|void
      */
-    public function index()
-    {
-        $this->paginate = [
-            'contain' => ['Users']
-        ];
-        $articles = $this->paginate($this->Articles);
-        $this->set(compact('articles'));
+    public function index() {
+      $this->paginate = [
+          'contain' => ['Users']
+      ];
+      $articles = $this->paginate($this->Articles);
+      $this->set(compact('articles'));
     }
-    public function ckeditor($value='')
-    {
-      $this->layout = false;
-    }
-    /**
-     * View method
-     *
-     * @param string|null $id Article id.
-     * @return \Cake\Http\Response|void
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
-    public function view($id = null)
-    {
+
+
+
+  /**
+   * View method
+   *
+   * @param string|null $id Article id.
+   * @return \Cake\Http\Response|void
+   * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+   */
+  public function view($id = null) {
         $article = $this->Articles->get($id, [
-            'contain' => ['Users', 'Categories', 'Tags']
+          'contain' => ['Users', 'Categories', 'Tags']
         ]);
+
         $this->set('article', $article);
     }
+
+
    public function uploadImage() {
     $typeFile = ['jpg','png','jpeg'];
     $upload_dir = '/uploads/articles/';
@@ -49,18 +49,26 @@ class ArticlesController extends AppController
     echo json_encode($upload);
     die();
   }
-  public function uploadImageCk()
-  {
+
+  public function uploadImageCk() {
+
     $typeFile = ['jpg','png','jpeg'];
     $upload_dir = '/uploads/articles/';
     $upload = $this->Upload($typeFile,$upload_dir,'upload');
+
     $type = $_GET['type'];
     $CKEditor = $_GET['CKEditor'];
     $funcNum  = $_GET['CKEditorFuncNum'];
+
     if ($upload) {
       echo '<script>window.parent.CKEDITOR.tools.callFunction('.$funcNum.', "'.$upload.'", "'.$message.'")</script>';
     }
+
+
   }
+
+
+
     /**
      * Add method
      *
@@ -68,21 +76,26 @@ class ArticlesController extends AppController
      */
     public function add() {
       $article = $this->Articles->newEntity();
+
       if ($this->request->is('post')) {
+
           $article = $this->Articles->patchEntity($article, $this->request->getData());
+          
           if ($this->Articles->save($article)) {
-              $this->Flash->success(__('The article has been saved.'));
-              return $this->redirect(['action' => 'index']);
+            $this->Flash->success(__('The article has been saved.'));
+            return $this->redirect(['action' => 'index']);
           }else {
-            dd($article->errors());
+            // dd($article);
           }
           $this->Flash->error(__('The article could not be saved. Please, try again.'));
       }
       $users = $this->Articles->Users->find('list', ['limit' => 200]);
-      $categories = $this->Articles->Categories->find('list', ['limit' => 200]);
+      $categories = $this->Articles->Categories->find('list', ['limit' => 200])->toArray();
+
       $tags = $this->Articles->Tags->find('list', ['limit' => 200]);
       $this->set(compact('article', 'users', 'categories', 'tags'));
     }
+
     /**
      * Edit method
      *
@@ -90,24 +103,28 @@ class ArticlesController extends AppController
      * @return \Cake\Http\Response|null Redirects on successful edit, renders view otherwise.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function edit($id = null)
-    {
-        $article = $this->Articles->get($id, [
-            'contain' => ['Categories', 'Tags']
-        ]);
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $article = $this->Articles->patchEntity($article, $this->request->getData());
-            if ($this->Articles->save($article)) {
-                $this->Flash->success(__('The article has been saved.'));
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('The article could not be saved. Please, try again.'));
+    public function edit($id = null) {
+      $article = $this->Articles->get($id, [
+          'contain' => ['Categories', 'Tags']
+      ]);
+
+
+      if ($this->request->is(['patch', 'post', 'put'])) {
+        $article = $this->Articles->patchEntity($article, $this->request->getData());
+        if ($this->Articles->save($article)) {
+            $this->Flash->success(__('The article has been saved.'));
+
+            return $this->redirect(['action' => 'index']);
         }
-        $users = $this->Articles->Users->find('list', ['limit' => 200]);
-        $categories = $this->Articles->Categories->find('list', ['limit' => 200]);
-        $tags = $this->Articles->Tags->find('list', ['limit' => 200]);
-        $this->set(compact('article', 'users', 'categories', 'tags'));
+        $this->Flash->error(__('The article could not be saved. Please, try again.'));
+      }
+      $users = $this->Articles->Users->find('list', ['limit' => 200]);
+      $categories = $this->Articles->Categories->find('list', ['limit' => 200]);
+      $tags = $this->Articles->Tags->find('list', ['limit' => 200]);
+
+      $this->set(compact('article', 'users', 'categories', 'tags'));
     }
+
     /**
      * Delete method
      *
@@ -124,6 +141,7 @@ class ArticlesController extends AppController
         } else {
             $this->Flash->error(__('The article could not be deleted. Please, try again.'));
         }
+
         return $this->redirect(['action' => 'index']);
     }
 }

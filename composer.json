@@ -11,7 +11,7 @@
         "cakephp/plugin-installer": "^1.0",
         "dereuromark/cakephp-tinyauth": "^1.12",
         "dereuromark/cakephp-tools": "^1.9",
-        "firebase/php-jwt": "^5.0",
+        "firebase/php-jwt": "^6.0",
         "imagine/imagine": "^1.2",
         "league/flysystem": "^1.0",
         "mobiledetect/mobiledetectlib": "2.*"
